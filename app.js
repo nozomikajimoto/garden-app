@@ -1,11 +1,13 @@
 const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const TYPE_LABELS = { evergreen:'常緑', deciduous:'落葉', annual:'一年草', perennial:'宿根草' };
 const CURRENT_MONTH = new Date().getMonth() + 1;
-const STORAGE_KEY = 'garden-plants-v2';
+const STORAGE_KEY = 'garden-plants-v3';
 
 // 千葉県基準の初期植物データ
 // 開花時期は筑波実験植物園図鑑（https://tbg.kahaku.go.jp/recommend/illustrated/）を参考
 const SEED_DATA = [
+  // --- 2024年以前 ---
+  { name:'アナベル', type:'deciduous', bloomingMonths:[6,7,8], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[2,3], notes:'アジサイ系落葉低木・白大輪' },
   // --- 2025春 ---
   { name:'シモツケ ホワイトゴールド', type:'deciduous', bloomingMonths:[5,6,7,8,9,10,11], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[7,8], notes:'耐寒性落葉低木', url:'https://tbg.kahaku.go.jp/recommend/illustrated/result.php?p=1&mode=easy&order=staff&name=%E3%82%B7%E3%83%A2%E3%83%84%E3%82%B1' },
   { name:'芝桜', type:'evergreen', bloomingMonths:[3,4,5], leafMonths:[], fertilizerMonths:[3,9], pruningMonths:[5,6], notes:'' },
@@ -52,6 +54,12 @@ const SEED_DATA = [
   { name:'ハーデンベルギア', type:'evergreen', bloomingMonths:[2,3,4], leafMonths:[], fertilizerMonths:[3,9], pruningMonths:[4,5], notes:'常緑つる性' },
   { name:'ジンチョウゲ', type:'evergreen', bloomingMonths:[2,3,4], leafMonths:[], fertilizerMonths:[3,9], pruningMonths:[4], notes:'常緑低木' },
   { name:'ウンナンオウバイ', type:'evergreen', bloomingMonths:[2,3,4], leafMonths:[], fertilizerMonths:[3,9], pruningMonths:[4,5], notes:'半常緑' },
+  { name:'ライム', type:'evergreen', bloomingMonths:[5,6], leafMonths:[], fertilizerMonths:[3,6,9], pruningMonths:[3,4], notes:'常緑低木・要冬越し保護' },
+  { name:'エリカ・ホワイトデライト', type:'evergreen', bloomingMonths:[11,12,1,2,3], leafMonths:[], fertilizerMonths:[3,9], pruningMonths:[3,4], notes:'常緑低木・冬〜春咲き' },
+  { name:'スペアミント', type:'perennial', bloomingMonths:[7,8,9], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[4,7], pruningMonths:[5,7,9], notes:'ハーブ・地下茎で広がる' },
+  { name:'アシタバ', type:'perennial', bloomingMonths:[7,8,9], leafMonths:[3,4,5,6,7,8,9,10,11], fertilizerMonths:[3,6,9], pruningMonths:[], notes:'食用ハーブ' },
+  { name:'コキア', type:'annual', bloomingMonths:[], leafMonths:[5,6,7,8,9,10,11], fertilizerMonths:[5,7], pruningMonths:[], notes:'葉色鑑賞・秋に紅葉' },
+  { name:'シソ', type:'annual', bloomingMonths:[8,9,10], leafMonths:[5,6,7,8,9,10], fertilizerMonths:[5,7], pruningMonths:[8], notes:'食用ハーブ・花穂を摘む' },
 ];
 
 // ===== Storage =====
