@@ -198,6 +198,15 @@ h1 { font-size: 1.05rem; font-weight: 700; color: var(--primary); }
 .badge.annual     { background: #E3F2FD; color: #1565C0; }
 .badge.perennial  { background: #F3E5F5; color: #6A1B9A; }
 
+/* Plant link */
+.plant-link {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+.plant-link:hover { color: var(--primary); }
+
 /* Empty state */
 .empty-state { text-align: center; padding: 3rem; color: var(--text-light); }
 .empty-state p { margin-bottom: 1rem; }

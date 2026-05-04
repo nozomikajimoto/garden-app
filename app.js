@@ -1,13 +1,13 @@
 const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const TYPE_LABELS = { evergreen:'常緑', deciduous:'落葉', annual:'一年草', perennial:'宿根草' };
 const CURRENT_MONTH = new Date().getMonth() + 1;
-const STORAGE_KEY = 'garden-plants-v1';
+const STORAGE_KEY = 'garden-plants-v2';
 
 // 千葉県基準の初期植物データ
 // 開花時期は筑波実験植物園図鑑（https://tbg.kahaku.go.jp/recommend/illustrated/）を参考
 const SEED_DATA = [
   // --- 2025春 ---
-  { name:'シモツケ ホワイトゴールド', type:'deciduous', bloomingMonths:[5,6,7,8,9,10,11], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[7,8], notes:'耐寒性落葉低木' },
+  { name:'シモツケ ホワイトゴールド', type:'deciduous', bloomingMonths:[5,6,7,8,9,10,11], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[7,8], notes:'耐寒性落葉低木', url:'https://tbg.kahaku.go.jp/recommend/illustrated/result.php?p=1&mode=easy&order=staff&name=%E3%82%B7%E3%83%A2%E3%83%84%E3%82%B1' },
   { name:'芝桜', type:'evergreen', bloomingMonths:[3,4,5], leafMonths:[], fertilizerMonths:[3,9], pruningMonths:[5,6], notes:'' },
   { name:'カーペットカスミソウ', type:'perennial', bloomingMonths:[5,6,7], leafMonths:[3,4,5,6,7,8,9,10,11], fertilizerMonths:[4,9], pruningMonths:[7], notes:'' },
   { name:'スーパーアリッサム アイシクルナイト', type:'annual', bloomingMonths:[3,4,5,6,9,10,11], leafMonths:[2,3,4,5,6,9,10,11,12], fertilizerMonths:[3,10], pruningMonths:[5,6], notes:'' },
@@ -31,13 +31,13 @@ const SEED_DATA = [
   // --- 2025夏 ---
   { name:'コブミカン', type:'evergreen', bloomingMonths:[4,5], leafMonths:[], fertilizerMonths:[3,6,9], pruningMonths:[3,4], notes:'' },
   { name:'アロニア', type:'deciduous', bloomingMonths:[4,5], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[12,1,2], notes:'秋に紅葉・黒い実' },
-  { name:'ミソハギ', type:'perennial', bloomingMonths:[7,8,9], leafMonths:[5,6,7,8,9,10], fertilizerMonths:[3,9], pruningMonths:[11,3], notes:'' },
+  { name:'ミソハギ', type:'perennial', bloomingMonths:[7,8,9], leafMonths:[5,6,7,8,9,10], fertilizerMonths:[3,9], pruningMonths:[11,3], notes:'', url:'https://tbg.kahaku.go.jp/recommend/illustrated/result.php?p=1&mode=easy&order=staff&name=%E3%83%9F%E3%82%BD%E3%83%8F%E3%82%AE' },
   { name:'レモングラス', type:'annual', bloomingMonths:[], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[4,7], pruningMonths:[4,10], notes:'非耐寒性（日本では一年草扱い）' },
   { name:'ネコノヒゲ', type:'annual', bloomingMonths:[7,8,9,10], leafMonths:[5,6,7,8,9,10,11], fertilizerMonths:[5,7,9], pruningMonths:[7,9], notes:'非耐寒性（日本では一年草扱い）' },
   { name:'センニチコウ', type:'annual', bloomingMonths:[6,7,8,9,10,11], leafMonths:[5,6,7,8,9,10,11], fertilizerMonths:[6,8,10], pruningMonths:[], notes:'' },
   // --- 2025秋 ---
   { name:'ウィンターコスモス', type:'annual', bloomingMonths:[9,10,11,12], leafMonths:[4,5,6,7,8,9,10,11,12], fertilizerMonths:[4,9], pruningMonths:[8], notes:'秋〜冬咲き' },
-  { name:'ノリウツギ マキシ ファイヤーライト', type:'deciduous', bloomingMonths:[6,7,8], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[12,1,2], notes:'秋に花色が変化' },
+  { name:'ノリウツギ マキシ ファイヤーライト', type:'deciduous', bloomingMonths:[6,7,8], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[12,1,2], notes:'秋に花色が変化', url:'https://tbg.kahaku.go.jp/recommend/illustrated/result.php?p=1&mode=easy&order=staff&name=%E3%83%8E%E3%83%AA%E3%82%A6%E3%83%84%E3%82%AE' },
   { name:'チョコレートコスモス', type:'perennial', bloomingMonths:[6,7,8,9,10,11], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[4,7,9], pruningMonths:[11,3], notes:'半耐寒性（要保護）' },
   { name:'イチジク ホワイトイスキア', type:'deciduous', bloomingMonths:[7,8,9,10], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,6,9], pruningMonths:[12,1,2], notes:'開花は目立たない（果実時期）' },
   { name:'サルビア レウカンサ ピンクアメジスト', type:'perennial', bloomingMonths:[9,10,11,12], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[4,9], pruningMonths:[3,4], notes:'半耐寒性宿根草' },
@@ -48,7 +48,7 @@ const SEED_DATA = [
   // --- 2026冬 ---
   { name:'スイセン', type:'perennial', bloomingMonths:[12,1,2,3], leafMonths:[11,12,1,2,3,4,5], fertilizerMonths:[10,2], pruningMonths:[5,6], notes:'芽出し苗' },
   // --- 2026春 ---
-  { name:'ユキヤナギ', type:'deciduous', bloomingMonths:[3,4], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[4,5], notes:'' },
+  { name:'ユキヤナギ', type:'deciduous', bloomingMonths:[3,4], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[4,5], notes:'', url:'https://tbg.kahaku.go.jp/recommend/illustrated/result.php?p=1&mode=easy&order=staff&name=%E3%83%A6%E3%82%AD%E3%83%A4%E3%83%8A%E3%82%AE' },
   { name:'ハーデンベルギア', type:'evergreen', bloomingMonths:[2,3,4], leafMonths:[], fertilizerMonths:[3,9], pruningMonths:[4,5], notes:'常緑つる性' },
   { name:'ジンチョウゲ', type:'evergreen', bloomingMonths:[2,3,4], leafMonths:[], fertilizerMonths:[3,9], pruningMonths:[4], notes:'常緑低木' },
   { name:'ウンナンオウバイ', type:'evergreen', bloomingMonths:[2,3,4], leafMonths:[], fertilizerMonths:[3,9], pruningMonths:[4,5], notes:'半常緑' },
@@ -148,7 +148,7 @@ function renderTimeline() {
 
     return `<div class="plant-row">
       <div class="tl-name-col plant-name-area">
-        <div class="plant-name-text" title="${esc(plant.notes)}">${esc(plant.name)}</div>
+        <div class="plant-name-text" title="${esc(plant.notes)}">${plantNameHtml(plant)}</div>
         <div class="row-meta">
           <span class="badge ${plant.type}">${TYPE_LABELS[plant.type]}</span>
         </div>
@@ -186,7 +186,7 @@ function renderMonthly() {
         ? '<div class="empty-section">なし</div>'
         : `<div class="plant-chips">${s.items.map(p => `
             <div class="plant-chip">
-              <span class="chip-name" title="${esc(p.notes)}">${esc(p.name)}</span>
+              <span class="chip-name" title="${esc(p.notes)}">${plantNameHtml(p)}</span>
               <span class="badge ${p.type}">${TYPE_LABELS[p.type]}</span>
             </div>`).join('')}
           </div>`}
@@ -197,4 +197,10 @@ function esc(s) {
   return String(s || '').replace(/[&<>"]/g, c =>
     ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c])
   );
+}
+
+function plantNameHtml(plant) {
+  const name = esc(plant.name);
+  if (!plant.url) return name;
+  return `<a href="${plant.url}" target="_blank" rel="noopener" class="plant-link">${name}</a>`;
 }
