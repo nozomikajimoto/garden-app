@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>庭の植物管理</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <span class="header-icon">🌿</span>
+      <div>
+        <h1>庭の植物管理</h1>
+        <span class="header-sub">千葉県基準</span>
+      </div>
+    </div>
+    <button class="btn-primary" id="add-btn">＋ 植物を追加</button>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="timeline">タイムライン</button>
+    <button class="tab" data-tab="monthly">月別</button>
+  </nav>
+
+  <!-- タイムラインタブ -->
+  <div id="tab-timeline" class="tab-content">
+    <div class="controls">
+      <div class="filter-group">
+        <span class="filter-label">種別</span>
+        <select id="type-filter">
+          <option value="">すべて</option>
+          <option value="evergreen">常緑</option>
+          <option value="deciduous">落葉</option>
+          <option value="annual">一年草</option>
+          <option value="perennial">宿根草</option>
+        </select>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><span class="swatch blooming-sw"></span>開花</span>
+        <span class="legend-item"><span class="swatch both-sw"></span>開花＋葉</span>
+        <span class="legend-item"><span class="swatch leaf-sw"></span>葉あり</span>
+        <span class="legend-item"><span class="swatch none-sw"></span>葉なし</span>
+        <span class="legend-item"><span class="dot fert-dot"></span>肥料</span>
+        <span class="legend-item"><span class="dot prun-dot"></span>剪定</span>
+      </div>
+    </div>
+
+    <div class="timeline-wrap">
+      <div class="tl-header">
+        <div class="tl-name-col"></div>
+        <div class="tl-cells" id="month-labels"></div>
+      </div>
+      <div id="plant-rows"></div>
+    </div>
+
+    <div id="empty-state" class="empty-state hidden">
+      <p>植物が登録されていません</p>
+      <button class="btn-primary" id="add-btn-empty">最初の植物を追加</button>
+    </div>
+  </div>
+
+  <!-- 月別タブ -->
+  <div id="tab-monthly" class="tab-content hidden">
+    <div class="month-nav-row">
+      <button class="month-arrow" id="prev-month">‹</button>
+      <div class="month-display" id="month-display"></div>
+      <button class="month-arrow" id="next-month">›</button>
+    </div>
+    <div class="monthly-grid" id="monthly-content"></div>
+  </div>
+
+  <!-- モーダル -->
+  <div id="modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">植物を追加</h2>
+        <button class="btn-close" id="modal-close">✕</button>
+      </div>
+      <form id="plant-form">
+        <div class="form-section">
+          <div class="form-group">
+            <label for="f-name">植物名 <span class="req">*</span></label>
+            <input type="text" id="f-name" required placeholder="例: サクラ">
+          </div>
+          <div class="form-group">
+            <label>種別 <span class="req">*</span></label>
+            <div class="type-btns">
+              <button type="button" class="type-btn" data-value="evergreen">常緑</button>
+              <button type="button" class="type-btn" data-value="deciduous">落葉</button>
+              <button type="button" class="type-btn" data-value="annual">一年草</button>
+              <button type="button" class="type-btn" data-value="perennial">宿根草</button>
+            </div>
+            <input type="hidden" id="f-type">
+          </div>
+          <div class="form-group">
+            <label for="f-notes">メモ</label>
+            <input type="text" id="f-notes" placeholder="品種・特記事項など">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-label">🌸 開花時期</div>
+          <div class="month-picker" id="p-blooming"></div>
+        </div>
+
+        <div class="form-section" id="leaf-section">
+          <div class="section-label" id="leaf-label">🌿 葉がついている時期</div>
+          <div class="month-picker" id="p-leaf"></div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-label">💧 肥料の時期</div>
+          <div class="month-picker" id="p-fertilizer"></div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-label">✂️ 剪定の時期</div>
+          <div class="month-picker" id="p-pruning"></div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="modal-cancel">キャンセル</button>
+          <button type="submit" class="btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
