@@ -8,6 +8,7 @@ const STORAGE_KEY = 'garden-plants-v3';
 const SEED_DATA = [
   // --- 2024年以前 ---
   { name:'アナベル', type:'deciduous', bloomingMonths:[6,7,8], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[2,3], notes:'アジサイ系落葉低木・白大輪' },
+  { name:'モッコウバラ', type:'evergreen', bloomingMonths:[4,5], leafMonths:[], fertilizerMonths:[1,5,9], pruningMonths:[5,6], notes:'常緑つる性・一季咲き・トゲなし' },
   // --- 2025春 ---
   { name:'シモツケ ホワイトゴールド', type:'deciduous', bloomingMonths:[5,6,7,8,9,10,11], leafMonths:[4,5,6,7,8,9,10,11], fertilizerMonths:[3,9], pruningMonths:[7,8], notes:'耐寒性落葉低木', url:'https://tbg.kahaku.go.jp/recommend/illustrated/result.php?p=1&mode=easy&order=staff&name=%E3%82%B7%E3%83%A2%E3%83%84%E3%82%B1' },
   { name:'芝桜', type:'evergreen', bloomingMonths:[3,4,5], leafMonths:[], fertilizerMonths:[3,9], pruningMonths:[5,6], notes:'' },
