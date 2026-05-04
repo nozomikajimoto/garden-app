@@ -63,16 +63,7 @@ function loadPlants() {
   return seeds;
 }
 
-function savePlants(plants) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(plants));
-}
-
-function nextId(plants) {
-  return plants.length === 0 ? 1 : Math.max(...plants.map(p => p.id)) + 1;
-}
-
 let plants = [];
-let editingId = null;
 let typeFilter = '';
 let monthlyMonth = CURRENT_MONTH;
 
@@ -80,16 +71,12 @@ let monthlyMonth = CURRENT_MONTH;
 document.addEventListener('DOMContentLoaded', () => {
   plants = loadPlants();
   buildMonthLabels();
-  buildMonthPickers();
   renderTimeline();
   renderMonthly();
   bindUI();
 });
 
 function bindUI() {
-  document.getElementById('add-btn').addEventListener('click', () => openModal());
-  document.getElementById('add-btn-empty')?.addEventListener('click', () => openModal());
-
   document.querySelectorAll('.tab').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -111,22 +98,6 @@ function bindUI() {
   document.getElementById('next-month').addEventListener('click', () => {
     monthlyMonth = monthlyMonth === 12 ? 1 : monthlyMonth + 1;
     renderMonthly();
-  });
-
-  document.getElementById('modal-close').addEventListener('click', closeModal);
-  document.getElementById('modal-cancel').addEventListener('click', closeModal);
-  document.getElementById('modal').addEventListener('click', e => {
-    if (e.target === e.currentTarget) closeModal();
-  });
-  document.getElementById('plant-form').addEventListener('submit', submitForm);
-
-  document.querySelectorAll('.type-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('f-type').value = btn.dataset.value;
-      updateLeafSection(btn.dataset.value);
-    });
   });
 }
 
@@ -180,8 +151,6 @@ function renderTimeline() {
         <div class="plant-name-text" title="${esc(plant.notes)}">${esc(plant.name)}</div>
         <div class="row-meta">
           <span class="badge ${plant.type}">${TYPE_LABELS[plant.type]}</span>
-          <button class="icon-btn" onclick="openModal(${plant.id})" title="編集">✏️</button>
-          <button class="icon-btn" onclick="delPlant(${plant.id})" title="削除">🗑️</button>
         </div>
       </div>
       <div class="tl-cells">${cells}</div>
@@ -222,126 +191,6 @@ function renderMonthly() {
             </div>`).join('')}
           </div>`}
     </div>`).join('');
-}
-
-// ===== Modal =====
-function buildMonthPickers() {
-  ['p-blooming','p-leaf','p-fertilizer','p-pruning'].forEach(id => {
-    document.getElementById(id).innerHTML = MONTHS.map((m, i) =>
-      `<button type="button" class="mp-btn" data-m="${i+1}">${m}</button>`
-    ).join('');
-    document.getElementById(id).querySelectorAll('.mp-btn').forEach(b =>
-      b.addEventListener('click', () => b.classList.toggle('active'))
-    );
-  });
-}
-
-function getMonths(pickerId) {
-  return [...document.querySelectorAll(`#${pickerId} .mp-btn.active`)].map(b => +b.dataset.m);
-}
-
-function setMonths(pickerId, months) {
-  document.querySelectorAll(`#${pickerId} .mp-btn`).forEach(b =>
-    b.classList.toggle('active', months.includes(+b.dataset.m))
-  );
-}
-
-function updateLeafSection(type) {
-  const sec = document.getElementById('leaf-section');
-  const lbl = document.getElementById('leaf-label');
-  if (type === 'evergreen') {
-    sec.style.opacity = '0.5';
-    lbl.textContent = '🌿 葉がついている時期（常緑のため全月自動）';
-    document.querySelectorAll('#p-leaf .mp-btn').forEach(b => {
-      b.classList.add('active');
-      b.disabled = true;
-    });
-  } else {
-    sec.style.opacity = '1';
-    lbl.textContent = '🌿 葉がついている時期';
-    document.querySelectorAll('#p-leaf .mp-btn').forEach(b => { b.disabled = false; });
-  }
-}
-
-function resetForm() {
-  document.getElementById('plant-form').reset();
-  document.getElementById('f-type').value = '';
-  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-  ['p-blooming','p-leaf','p-fertilizer','p-pruning'].forEach(id => {
-    document.querySelectorAll(`#${id} .mp-btn`).forEach(b => {
-      b.classList.remove('active');
-      b.disabled = false;
-    });
-  });
-  document.getElementById('leaf-section').style.opacity = '1';
-  document.getElementById('leaf-label').textContent = '🌿 葉がついている時期';
-}
-
-function openModal(id = null) {
-  editingId = id;
-  resetForm();
-  document.getElementById('modal-title').textContent = id ? '植物を編集' : '植物を追加';
-
-  if (id) {
-    const p = plants.find(x => x.id === id);
-    if (!p) return;
-    document.getElementById('f-name').value = p.name;
-    document.getElementById('f-notes').value = p.notes || '';
-    document.getElementById('f-type').value = p.type;
-    document.querySelectorAll('.type-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.value === p.type)
-    );
-    setMonths('p-blooming', p.bloomingMonths);
-    setMonths('p-leaf', p.type === 'evergreen' ? [1,2,3,4,5,6,7,8,9,10,11,12] : p.leafMonths);
-    setMonths('p-fertilizer', p.fertilizerMonths);
-    setMonths('p-pruning', p.pruningMonths);
-    updateLeafSection(p.type);
-  }
-
-  document.getElementById('modal').classList.remove('hidden');
-  document.getElementById('f-name').focus();
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.add('hidden');
-  editingId = null;
-}
-
-function submitForm(e) {
-  e.preventDefault();
-  const name = document.getElementById('f-name').value.trim();
-  const type = document.getElementById('f-type').value;
-  if (!name || !type) { alert('植物名と種別は必須です'); return; }
-
-  const data = {
-    name, type,
-    notes:            document.getElementById('f-notes').value.trim(),
-    bloomingMonths:   getMonths('p-blooming'),
-    leafMonths:       type === 'evergreen' ? [1,2,3,4,5,6,7,8,9,10,11,12] : getMonths('p-leaf'),
-    fertilizerMonths: getMonths('p-fertilizer'),
-    pruningMonths:    getMonths('p-pruning'),
-  };
-
-  if (editingId) {
-    const idx = plants.findIndex(p => p.id === editingId);
-    if (idx !== -1) plants[idx] = { id: editingId, ...data };
-  } else {
-    plants.push({ id: nextId(plants), ...data });
-  }
-
-  savePlants(plants);
-  renderTimeline();
-  renderMonthly();
-  closeModal();
-}
-
-function delPlant(id) {
-  const plant = plants.find(p => p.id === id);
-  if (!confirm(`「${plant?.name}」を削除しますか？`)) return;
-  plants = plants.filter(p => p.id !== id);
-  savePlants(plants);
-  renderTimeline();
-  renderMonthly();
 }
 
 function esc(s) {
